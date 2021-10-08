@@ -7,27 +7,18 @@ const valid = require('./../middleware/valid')
 const employeeControll = require('./../controller/employee')
 
 router.post(
-  '/add',
+  '/api/add',
   validateRule.validationRule(),
   valid.validate,
   employeeControll.addEmployee,
 )
 
-router.get('/list', employeeControll.employeeList)
+router.get('/api/list', employeeControll.employeeList)
 
-router.post(
-  '/login',
-  // validateRule.validationRule(),
-  // valid.validate,
-  employeeControll.employeeLogin,
-)
+router.post('/api/login', employeeControll.employeeLogin)
 
-router.post(
-  '/pagination',
-  // validateRule.validationRule(),
-  // valid.validate,
+router.get('/api/search', employeeControll.searchByName)
 
-  employeeControll.paginationEmployee,
-)
+router.get('/page', employeeControll.pageSearching)
 
 module.exports = router

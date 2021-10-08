@@ -63,7 +63,7 @@ const employeeLogin = async (req, res) => {
   }
 }
 
-// search by name
+// search by field
 
 const searchByName = async (req, res) => {
   try {
@@ -75,22 +75,25 @@ const searchByName = async (req, res) => {
   }
 }
 
-const paginationEmployee = async (req, res) => {
+const pageSearching = async (req, res, next) => {
   try {
-    const currentPage = req.body.currentPage
-    const pageSize = req.bodypageSize
-
-    const skip = pageSize * (currentPage - 1)
-    const limit = pageSize
-
-    const data = await Employee.find({}).skip(skip).limit(limit)
-    if (!data) {
-      errorHandler(res, constants)
+    let { page, size, sort } = req.query
+    if (!page) {
+      page = 1
     }
-    successHandler(res, constants.PAG_SUCCESS)
+    if (!size) {
+      size = 10
+    }
+    const limit = parseInt(size)
+    const user = await Employee.find().sort().limit(limit)
+    res.send({
+      page,
+      size,
+      Info: user,
+    })
   } catch (error) {
     console.log(error)
-    errorHandler(res)
+    res.status(500).json({ msg: 'something went wrong' })
   }
 }
 
@@ -99,5 +102,5 @@ module.exports = {
   employeeList,
   employeeLogin,
   searchByName,
-  paginationEmployee,
+  pageSearching,
 }
