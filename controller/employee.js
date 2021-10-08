@@ -2,9 +2,7 @@ const Employee = require('../models/employee')
 const constants = require('./../constant/employee')
 const { successHandler, errorHandler } = require('./../helper/responseHandler')
 const bcrypt = require('bcrypt')
-const tokenSecret = 'secret token'
 const jwt = require('jsonwebtoken')
-const rounds = 10
 const nodemailer = require('nodemailer')
 
 /**
@@ -15,7 +13,7 @@ const nodemailer = require('nodemailer')
 
 const addEmployee = async (req, res) => {
   try {
-    req.body.password = await bcrypt.hash(req.body.password, rounds)
+    req.body.password = await bcrypt.hash(req.body.password, constants.ROUNDS)
     const employee = await new Employee(req.body)
     await employee.save()
     successHandler(res, constants.ADD_MSG)
@@ -36,8 +34,8 @@ const employeeList = async (req, res) => {
 }
 
 generateToken = (user) => {
-  return jwt.sign({ data: user }, tokenSecret, {
-    expiresIn: '24h',
+  return jwt.sign({ data: user }, constants.TOKEN_SECRET, {
+    expiresIn: constants.EXP_HOUR,
   })
 }
 
@@ -65,4 +63,41 @@ const employeeLogin = async (req, res) => {
   }
 }
 
-module.exports = { addEmployee, employeeList, employeeLogin }
+// search by name
+
+const searchByName = async (req, res) => {
+  try {
+    const result = await Employee.find(req.body)
+    successHandler(res, constants.SUCCESS_SEARCH, result)
+  } catch (error) {
+    console.log(error)
+    errorHandler(res, error)
+  }
+}
+
+const paginationEmployee = async (req, res) => {
+  try {
+    const currentPage = req.body.currentPage
+    const pageSize = req.bodypageSize
+
+    const skip = pageSize * (currentPage - 1)
+    const limit = pageSize
+
+    const data = await Employee.find({}).skip(skip).limit(limit)
+    if (!data) {
+      errorHandler(res, constants)
+    }
+    successHandler(res, constants.PAG_SUCCESS)
+  } catch (error) {
+    console.log(error)
+    errorHandler(res)
+  }
+}
+
+module.exports = {
+  addEmployee,
+  employeeList,
+  employeeLogin,
+  searchByName,
+  paginationEmployee,
+}

@@ -22,4 +22,12 @@ router.post(
   employeeControll.employeeLogin,
 )
 
+router.post(
+  '/pagination',
+  // validateRule.validationRule(),
+  // valid.validate,
+
+  employeeControll.paginationEmployee,
+)
+
 module.exports = router

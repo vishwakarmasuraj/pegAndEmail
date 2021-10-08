@@ -7,6 +7,8 @@ const constants = {
   SUCCESS_LOG_MSG: 'Login Successfull',
   LOGINPASSFAIL: 'Password does not valid',
   FAIL_LOG: 'You can not Login by this email and password',
+  PAG_INPUT_MISS: 'Input is missing',
+  PAG_SUCCESS: 'Found Record',
 }
 
 module.exports = Object.freeze(constants)
