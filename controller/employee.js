@@ -65,15 +65,15 @@ const employeeLogin = async (req, res) => {
 
 // search by field
 
-// const searchByName = async (req, res) => {
-//   try {
-//     const result = await Employee.find(req.body)
-//     successHandler(res, constants.SUCCESS_SEARCH, result)
-//   } catch (error) {
-//     console.log(error)
-//     errorHandler(res, error)
-//   }
-// }
+const searchByName = async (req, res) => {
+  try {
+    const result = await Employee.find(req.body)
+    successHandler(res, constants.SUCCESS_SEARCH, result)
+  } catch (error) {
+    console.log(error)
+    errorHandler(res, error)
+  }
+}
 
 const pageSearching = async (req, res) => {
   try {
@@ -110,7 +110,7 @@ const searchByName = async (req, res) => {
     if (!search) {
       res.status(402).json({ message: 'search data not found' })
     }
-    const result = await Employee.find(req.query.name)
+    const result = await Employee.find([req.query])
     res.status(200).json({ message: 'search data found ', result })
   } catch (error) {
     console.log(error)
