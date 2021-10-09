@@ -17,8 +17,10 @@ router.get('/api/list', employeeControll.employeeList)
 
 router.post('/api/login', employeeControll.employeeLogin)
 
-router.get('/api/search', employeeControll.searchByName)
+// router.get('/api/search', employeeControll.searchByName)
 
 router.get('/page', employeeControll.pageSearching)
+
+router.get('/srch', employeeControll.searchByName)
 
 module.exports = router

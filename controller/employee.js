@@ -65,19 +65,19 @@ const employeeLogin = async (req, res) => {
 
 // search by field
 
-const searchByName = async (req, res) => {
-  try {
-    const result = await Employee.find(req.body)
-    successHandler(res, constants.SUCCESS_SEARCH, result)
-  } catch (error) {
-    console.log(error)
-    errorHandler(res, error)
-  }
-}
+// const searchByName = async (req, res) => {
+//   try {
+//     const result = await Employee.find(req.body)
+//     successHandler(res, constants.SUCCESS_SEARCH, result)
+//   } catch (error) {
+//     console.log(error)
+//     errorHandler(res, error)
+//   }
+// }
 
-const pageSearching = async (req, res, next) => {
+const pageSearching = async (req, res) => {
   try {
-    let { page, size, search } = req.query
+    let { page, size, sort } = req.query
     if (!page) {
       page = 1
     }
@@ -86,17 +86,35 @@ const pageSearching = async (req, res, next) => {
     }
     const limit = parseInt(size)
     const user = await Employee.find()
-      .search({ search: req.query.search })
+      .search({ name: { $in: name } })
       .limit(limit)
     res.send({
       page,
       size,
 
-      Info: user,
+      Data: user,
     })
   } catch (error) {
     console.log(error)
     res.status(500).json({ msg: 'something went wrong' })
+  }
+}
+
+const searchByName = async (req, res) => {
+  try {
+    const page = req.query
+    const search = req.query
+    if (!page) {
+      res.status(402).json({ message: 'page not found' })
+    }
+    if (!search) {
+      res.status(402).json({ message: 'search data not found' })
+    }
+    const result = await Employee.find(req.query.name)
+    res.status(200).json({ message: 'search data found ', result })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'something went wrong' })
   }
 }
 
@@ -106,4 +124,5 @@ module.exports = {
   employeeLogin,
   searchByName,
   pageSearching,
+  searchByName,
 }
