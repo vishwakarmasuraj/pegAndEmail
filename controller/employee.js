@@ -77,7 +77,7 @@ const searchByName = async (req, res) => {
 
 const pageSearching = async (req, res, next) => {
   try {
-    let { page, size, sort } = req.query
+    let { page, size, search } = req.query
     if (!page) {
       page = 1
     }
@@ -85,10 +85,13 @@ const pageSearching = async (req, res, next) => {
       size = 10
     }
     const limit = parseInt(size)
-    const user = await Employee.find().sort().limit(limit)
+    const user = await Employee.find()
+      .search({ search: req.query.search })
+      .limit(limit)
     res.send({
       page,
       size,
+
       Info: user,
     })
   } catch (error) {
