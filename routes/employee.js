@@ -21,6 +21,6 @@ router.post('/api/login', employeeControll.employeeLogin)
 
 router.get('/page', employeeControll.pageSearching)
 
-router.get('/srch', employeeControll.searchByName)
+// router.get('/srch', employeeControll.searchByName)
 
 module.exports = router
