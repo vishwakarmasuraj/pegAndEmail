@@ -22,7 +22,7 @@ const validationRule = () => {
     body('mobile')
       .notEmpty()
       .isNumeric()
-      .withMessage('Mobile number should be number'),
+      .withMessage('Mobile number should be numeric'),
     body('address').notEmpty(),
     body('status').notEmpty(),
   ]

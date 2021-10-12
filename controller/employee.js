@@ -67,7 +67,8 @@ const employeeLogin = async (req, res) => {
 
 // const searchByName = async (req, res) => {
 //   try {
-//     const result = await Employee.find(req.body)
+//     console.log(req.query)
+//     const result = await Employee.find({ name: req.query.name })
 //     successHandler(res, constants.SUCCESS_SEARCH, result)
 //   } catch (error) {
 //     console.log(error)
@@ -100,34 +101,22 @@ const employeeLogin = async (req, res) => {
 //   }
 // }
 
-// const searchByName = async (req, res) => {
-//   try {
-//     const page = req.query
-//     const search = req.query
-//     if (!page) {
-//       res.status(402).json({ message: 'page not found' })
-//     }
-//     if (!search) {
-//       res.status(402).json({ message: 'search data not found' })
-//     }
-//     const result = await Employee.find([req.query])
-//     res.status(200).json({ message: 'search data found ', result })
-//   } catch (error) {
-//     console.log(error)
-//     res.status(500).json({ message: 'something went wrong' })
-//   }
-// }
-
-const pageSearching = async (req, res) => {
+const empPagination = async (req, res) => {
   try {
-    const { page, search } = req.query
-    const result = await Employee.aggregate({
-      $match: { name: { name: req.query.name } },
-    })
-    res.status(200).json({ msg: 'found page' })
+    const { search, page, size, orderBy, orderByField, status } = req.query
+    if (!page) {
+      page = 1
+    }
+    if (!size) {
+      size = 10
+    }
+    const limit = parseInt(size)
+    console.log(req.query)
+    const user = await Employee.find().limit(limit)
+    successHandler(res, constants.PAG_SUCCESS, page, size, (data: user))
   } catch (error) {
     console.log(error)
-    res.status(500).json({ msg: 'something went wrong' })
+    errorHandler(res)
   }
 }
 
@@ -136,6 +125,6 @@ module.exports = {
   employeeList,
   employeeLogin,
   // searchByName,
-  pageSearching,
-  // searchByName,
+  // pageSearching,
+  empPagination,
 }
