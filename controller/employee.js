@@ -63,53 +63,42 @@ const employeeLogin = async (req, res) => {
   }
 }
 
+// const employeeEvent = async (req, res) => {
+//   try {
+//     console.log(req.query)
+//     let { page, size, sort } = req.query
+//     if (!page) {
+//       page = 1
+//     }
+//     if (!size) {
+//       size = 10
+//     }
+//     const limit = parseInt(size)
+//     const result = await Employee.find()
+//       .sort({ votes: 1, _id: -1 })
+//       .limit(limit)
+//     res.send({ page, size, result })
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
+
 const employeeEvent = async (req, res) => {
   try {
-    const aggregate_options = []
-    const page = parseInt(req.query.page) || constants.PAGE
-    const limit = parseInt(req.query.limit) || limit_
+    console.log(req.query)
+    const limitValue = parseInt(req.query.limit) || 2
+    const search = req.query.search || ''
 
-    const options = {
-      page,
-      limit,
-      collation: { locale: 'en' },
-      customLabels: {
-        totalDocs: 'totalResults',
-        docs: 'events',
-      },
-    }
-    let match = {}
-    if (req.query.q) {
-      match.name = { $regex: req.query.q, $options: 'i' }
-    }
-    if (req.query.date) {
-      let d = moment(req.query.date)
-      let next_day = moment(d).add(1, 'days')
-      match.start_date = { $gte: new Date(d), $lt: new Date(next_day) }
-    }
-    aggregate_options.push({ $match: match })
-    // successHandler(res, constants.SUCCESS_LOG_MSG,)
-    // Grouping
+    const skipValue = parseInt(req.query.page) || 1
+    const result = await Employee.find({
+      name: { $regex: search, $options: 'i' },
+    })
+      .limit(limitValue)
+      .skip(skipValue * limitValue - 1)
 
-    if (req.query.group !== 'false' && parseInt(req.query) !== 0) {
-      let group = {
-        _id: { $dateToString: { format: '%Y-%m-%d', date: '$start_date' } },
-        data: { $push: '$$ROOT' },
-      }
-      aggregate_options.push({ $group: group })
-    }
-
-    // SORTING
-    const sortOrder =
-      req.query.sort_order && req.query.sort_order === 'desc' ? -1 : 1
-    aggregation_options.push({ $sort: { 'data.start_date': sortOrder } })
-
-    const myAggregate = Employee.aggregate(aggregate_options)
-    const result = await Employee.find(myAggregate, options)
     successHandler(res, constants.RECORD_FOUND, result)
   } catch (error) {
     console.log(error)
-    errorHandler(res)
   }
 }
 
