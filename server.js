@@ -14,7 +14,7 @@ mongoose
     'mongodb+srv://suraj:suraj%405151@cluster0.oodet.mongodb.net/one?retryWrites=true&w=majority',
   )
   .then(() => {
-    console.log('connect to mongoose')
+    console.log('connect to Database')
   })
 
 const port =
