@@ -112,8 +112,10 @@ const empPagination = async (req, res) => {
     }
     const limit = parseInt(size)
     console.log(req.query)
-    const user = await Employee.find().limit(limit)
-    successHandler(res, constants.PAG_SUCCESS, page, size, user)
+    const data = await Employee.find()
+      .sort({ votes: 1, orderBy: req.query })
+      .limit(limit)
+    successHandler(res, constants.PAG_SUCCESS, { page, size, info: data })
   } catch (error) {
     console.log(error)
     errorHandler(res)
