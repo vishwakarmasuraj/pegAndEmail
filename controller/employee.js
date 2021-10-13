@@ -63,59 +63,50 @@ const employeeLogin = async (req, res) => {
   }
 }
 
-// search by field
-
-// const searchByName = async (req, res) => {
-//   try {
-//     console.log(req.query)
-//     const result = await Employee.find({ name: req.query.name })
-//     successHandler(res, constants.SUCCESS_SEARCH, result)
-//   } catch (error) {
-//     console.log(error)
-//     errorHandler(res, error)
-//   }
-// }
-
-// const pageSearching = async (req, res) => {
-//   try {
-//     let { page, size, sort } = req.query
-//     if (!page) {
-//       page = 1
-//     }
-//     if (!size) {
-//       size = 10
-//     }
-//     const limit = parseInt(size)
-//     const user = await Employee.find()
-//       .search({ name: { $in: name } })
-//       .limit(limit)
-//     res.send({
-//       page,
-//       size,
-
-//       Data: user,
-//     })
-//   } catch (error) {
-//     console.log(error)
-//     res.status(500).json({ msg: 'something went wrong' })
-//   }
-// }
-
-const empPagination = async (req, res) => {
+const employeeEvent = async (req, res) => {
   try {
-    const { search, page, size, orderBy, orderByField, status } = req.query
-    if (!page) {
-      page = 1
+    const aggregate_options = []
+    const page = parseInt(req.query.page) || constants.PAGE
+    const limit = parseInt(req.query.limit) || limit_
+
+    const options = {
+      page,
+      limit,
+      collation: { locale: 'en' },
+      customLabels: {
+        totalDocs: 'totalResults',
+        docs: 'events',
+      },
     }
-    if (!size) {
-      size = 10
+    let match = {}
+    if (req.query.q) {
+      match.name = { $regex: req.query.q, $options: 'i' }
     }
-    const limit = parseInt(size)
-    console.log(req.query)
-    const data = await Employee.find()
-      .sort({ votes: 1, orderBy: req.query })
-      .limit(limit)
-    successHandler(res, constants.PAG_SUCCESS, { page, size, info: data })
+    if (req.query.date) {
+      let d = moment(req.query.date)
+      let next_day = moment(d).add(1, 'days')
+      match.start_date = { $gte: new Date(d), $lt: new Date(next_day) }
+    }
+    aggregate_options.push({ $match: match })
+    // successHandler(res, constants.SUCCESS_LOG_MSG,)
+    // Grouping
+
+    if (req.query.group !== 'false' && parseInt(req.query) !== 0) {
+      let group = {
+        _id: { $dateToString: { format: '%Y-%m-%d', date: '$start_date' } },
+        data: { $push: '$$ROOT' },
+      }
+      aggregate_options.push({ $group: group })
+    }
+
+    // SORTING
+    const sortOrder =
+      req.query.sort_order && req.query.sort_order === 'desc' ? -1 : 1
+    aggregation_options.push({ $sort: { 'data.start_date': sortOrder } })
+
+    const myAggregate = Employee.aggregate(aggregate_options)
+    const result = await Employee.find(myAggregate, options)
+    successHandler(res, constants.RECORD_FOUND, result)
   } catch (error) {
     console.log(error)
     errorHandler(res)
@@ -126,7 +117,5 @@ module.exports = {
   addEmployee,
   employeeList,
   employeeLogin,
-  // searchByName,
-  // pageSearching,
-  empPagination,
+  employeeEvent,
 }

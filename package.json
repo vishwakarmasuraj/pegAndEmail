@@ -1,7 +1,6 @@
 {
   "name": "pagandmail",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
@@ -19,5 +18,15 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.9",
     "nodemailer": "^6.6.5"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishwakarmasuraj/pegAndEmail.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vishwakarmasuraj/pegAndEmail/issues"
+  },
+  "homepage": "https://github.com/vishwakarmasuraj/pegAndEmail#readme",
+  "description": ""
 }
