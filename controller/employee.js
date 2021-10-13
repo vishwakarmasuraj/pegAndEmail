@@ -91,7 +91,8 @@ const employeeEvent = async (req, res) => {
 
     const skipValue = parseInt(req.query.page) || 1
     const result = await Employee.find({
-      name: { $regex: search, $options: 'i' },
+      $regex: req.query.name,
+      $options: 'i',
     })
       .limit(limitValue)
       .skip(skipValue * limitValue - 1)
