@@ -86,16 +86,12 @@ const employeeLogin = async (req, res) => {
 const employeeEvent = async (req, res) => {
   try {
     console.log(req.query)
-    const limitValue = parseInt(req.query.limit) || 2
-    const search = req.query.search || ''
-
-    const skipValue = parseInt(req.query.page) || 1
-    const result = await Employee.find({
-      $regex: req.query.name,
-      $options: 'i',
-    })
-      .limit(limitValue)
-      .skip(skipValue * limitValue - 1)
+    // const limitValue = parseInt(req.query.limit) || 2
+    // const search = req.query.search || ''
+    // const skipValue = parseInt(req.query.page) || 1
+    const result = await Employee.find({ $search: { name: /S/ } })
+    // .limit(limitValue)
+    // .skip(skipValue * limitValue - 1)
 
     successHandler(res, constants.RECORD_FOUND, result)
   } catch (error) {
