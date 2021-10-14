@@ -3,7 +3,6 @@ const constants = require('./../constant/employee')
 const { successHandler, errorHandler } = require('./../helper/responseHandler')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const nodemailer = require('nodemailer')
 
 /**
  *
@@ -63,36 +62,15 @@ const employeeLogin = async (req, res) => {
   }
 }
 
-// const employeeEvent = async (req, res) => {
-//   try {
-//     console.log(req.query)
-//     let { page, size, sort } = req.query
-//     if (!page) {
-//       page = 1
-//     }
-//     if (!size) {
-//       size = 10
-//     }
-//     const limit = parseInt(size)
-//     const result = await Employee.find()
-//       .sort({ votes: 1, _id: -1 })
-//       .limit(limit)
-//     res.send({ page, size, result })
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
-
 const employeeEvent = async (req, res) => {
   try {
     console.log(req.query)
-    // const limitValue = parseInt(req.query.limit) || 2
-    // const search = req.query.search || ''
-    // const skipValue = parseInt(req.query.page) || 1
-    const result = await Employee.find({ $search: { name: /S/ } })
-    // .limit(limitValue)
-    // .skip(skipValue * limitValue - 1)
-
+    const limitValue = parseInt(req.query.limit) || 2
+    const search = req.query.search || ''
+    const skipValue = parseInt(req.query.page) || 1
+    const result = await Employee.find({ name: { $in: [`${search}`] } })
+      .limit(limitValue)
+      .skip(skipValue * limitValue - 1)
     successHandler(res, constants.RECORD_FOUND, result)
   } catch (error) {
     console.log(error)
