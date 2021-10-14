@@ -17,6 +17,8 @@ router.get('/api/list', employeeControll.employeeList)
 
 router.post('/api/login', employeeControll.employeeLogin)
 
+router.delete('/truncate', employeeControll.truncateCollection)
+
 router.get('/api/pagination', employeeControll.employeeEvent)
 
 module.exports = router

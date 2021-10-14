@@ -67,17 +67,24 @@ const employeeEvent = async (req, res) => {
     console.log(req.query)
     const limitValue = parseInt(req.query.limit) || 2
     const search = req.query.search || ''
-    const skipValue = parseInt(req.query.page) || 1
-    // const result = await Employee.find({ name: { $in: [/`${search}`/] } })
-    const result = await Employee.find({
-      $regex: req.query.name,
-      $options: 'i',
-    })
-      .limit(limitValue)
-      .skip(skipValue * limitValue - 1)
-    successHandler(res, constants.RECORD_FOUND, result)
+    const skipValue = parseInt(req.query.page) || 0
+    const result = await Employee.find({name: { $regex: `${search}`, $options: 'i'}}, {})
+    .limit(limitValue)
+    .skip(skipValue * limitValue - 1);
+    console.log(result);
+    successHandler(res, constants.RECORD_FOUND, result);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const truncateCollection = async (req, res) => {
+  try {
+    await Employee.remove({})
+    successHandler(res, constants.TRUNCATE_SUCCESS)
   } catch (error) {
     console.log(error)
+    errorHandler(res)
   }
 }
 
@@ -86,4 +93,5 @@ module.exports = {
   employeeList,
   employeeLogin,
   employeeEvent,
+  truncateCollection,
 }

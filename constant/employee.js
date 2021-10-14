@@ -13,6 +13,7 @@ const constants = {
   PAGE: 1,
   LIMIT: 10,
   RECORD_FOUND: 'Record found successfully',
+  TRUNCATE_SUCCESS: 'Truncate successFully',
 }
 
 module.exports = Object.freeze(constants)
