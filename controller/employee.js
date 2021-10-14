@@ -65,12 +65,17 @@ const employeeLogin = async (req, res) => {
 const employeeEvent = async (req, res) => {
   try {
     console.log(req.query)
-    const limitValue = parseInt(req.query.limit) || 2
+    const sort = {}
+    console.log(sort)
+    if(req.query.sortBy && req.query.orderBy){
+      sort[req.query.sortBy] = req.query.orderBy === 'desc' ? -1 : 1
+    }
+    // const limitValue = parseInt(req.query.limit) || 2
     const search = req.query.search || ''
-    const skipValue = parseInt(req.query.page) || 0
-    const result = await Employee.find({name: { $regex: `${search}`, $options: 'i'}}, {})
-    .limit(limitValue)
-    .skip(skipValue * limitValue - 1);
+    // const skipValue = parseInt(req.query.page) || 0
+    const result = await Employee.find({name: { $regex: `${search}`, $options: 'i'}}).sort(sort)
+    // .limit(limitValue)
+    // .skip(skipValue * limitValue - 1);
     console.log(result);
     successHandler(res, constants.RECORD_FOUND, result);
   } catch (error) {
