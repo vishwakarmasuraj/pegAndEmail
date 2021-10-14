@@ -68,7 +68,11 @@ const employeeEvent = async (req, res) => {
     const limitValue = parseInt(req.query.limit) || 2
     const search = req.query.search || ''
     const skipValue = parseInt(req.query.page) || 1
-    const result = await Employee.find({ name: { $in: [`${search}`] } })
+    // const result = await Employee.find({ name: { $in: [/`${search}`/] } })
+    const result = await Employee.find({
+      $regex: req.query.name,
+      $options: 'i',
+    })
       .limit(limitValue)
       .skip(skipValue * limitValue - 1)
     successHandler(res, constants.RECORD_FOUND, result)
