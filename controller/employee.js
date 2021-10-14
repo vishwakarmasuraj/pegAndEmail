@@ -66,14 +66,15 @@ const employeeEvent = async (req, res) => {
   try {
     console.log(req.query)
     const sort = {}
-    console.log(sort)
+    const match = {}
     if(req.query.sortBy && req.query.orderBy){
       sort[req.query.sortBy] = req.query.orderBy === 'desc' ? -1 : 1
     }
     // const limitValue = parseInt(req.query.limit) || 2
     const search = req.query.search || ''
     // const skipValue = parseInt(req.query.page) || 0
-    const result = await Employee.find({name: { $regex: `${search}`, $options: 'i'}}).sort(sort)
+    
+    const result = await Employee.find({name: { $regex: `${search}`, $options: 'i'}, status: req.query.status}).sort(sort)
     // .limit(limitValue)
     // .skip(skipValue * limitValue - 1);
     console.log(result);
