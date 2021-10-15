@@ -10,6 +10,8 @@ app.use(bodyParser.json());
 
 app.use(routes)
 
+// connect to mongoose
+
 mongoose
   .connect(
     process.env.DATABASE_CONNECTION
@@ -17,8 +19,4 @@ mongoose
   .then(() => {
     console.log('connect to Database')
   });
-
-// const port =
-//   process.env.NODE_ENV === 'production' ? process.env.PORT || 80 : 3000
-// app.listen(3000, () => console.log(`Server listening on port ${3000}`));
 app.listen(()=> console.log(`Server is listening at ${port}`))
