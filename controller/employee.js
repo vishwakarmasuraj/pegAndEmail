@@ -17,7 +17,7 @@ const addEmployee = async (req, res) => {
     await employee.save()
     successHandler(res, constants.ADD_MSG)
   } catch (error) {
-    console.log(error)
+    console.error(error)
     errorHandler(res)
   }
 }
@@ -27,7 +27,7 @@ const employeeList = async (req, res) => {
     const result = await Employee.find({})
     successHandler(res, constants.LIST_MSG, result)
   } catch (error) {
-    console.log(error)
+    console.error(error)
     errorHandler(res)
   }
 }
@@ -57,7 +57,7 @@ const employeeLogin = async (req, res) => {
       }
     })
   } catch (error) {
-    console.log(error)
+    console.error(error)
     errorHandler(res)
   }
 }
@@ -78,16 +78,16 @@ const employeeEvent = async (req, res) => {
     console.log(result);
     successHandler(res, constants.RECORD_FOUND, result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
 const truncateCollection = async (req, res) => {
   try {
     await Employee.remove({})
-    successHandler(res, constants.TRUNCATE_SUCCESS)
+    successHandler(res, constants.TRUNCATE_SUCCESS);
   } catch (error) {
-    console.log(error)
+    console.error(error);
     errorHandler(res)
   }
 }
