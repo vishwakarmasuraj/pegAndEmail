@@ -1,5 +1,6 @@
 const successHandler = (res, message, result) => {
   res.status(200).json({ message, result });
+  next()
 }
 
 const errorHandler = (res, message, error) => {
